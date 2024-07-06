@@ -17,6 +17,10 @@ app.get('/clear-cookie', (req, res) => {
   res.sendStatus(200)
 })
 
+app.get('/validate-session-of-cookie', (req, res) => {
+  res.send(req.cookies)
+})
+
 app.listen(8080, () => {
   console.log('Server listening on port 8080')
 })
