@@ -14,8 +14,7 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
-
-app.get("/", (req, res, next) => {
+function cookieJwtAuth(req, res, next) {
   const { token } = req.cookies
 
   try {
@@ -24,9 +23,25 @@ app.get("/", (req, res, next) => {
   } catch {
     next()
   }
-}, (req, res) => {
-  res.sendFile(path.join(import.meta.dirname, "/public/index.html"));
-})
+}
+
+class HomeControllerGet {
+  static path = '/'
+
+  static middleware = [
+    cookieJwtAuth,
+  ]
+
+  /**
+    * @param {import('express').Request} req
+    * @param {import('express').Response} res
+  */
+  static requestController(req, res) {
+    res.sendFile(path.join(import.meta.dirname, "/public/index.html"))
+  }
+}
+
+app.get(HomeControllerGet.path, ...HomeControllerGet.middleware, HomeControllerGet.requestController)
 
 app.get("/welcome", (req, res) => {
   res.sendFile(path.join(import.meta.dirname, "/public/welcome.html"));
